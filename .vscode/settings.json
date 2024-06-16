@@ -9,4 +9,7 @@
     ],
     "ros.distro": "humble",
     "cmake.configureOnOpen": true,
+    "files.associations": {
+        "*.sdf":"xml"
+    },
 }
