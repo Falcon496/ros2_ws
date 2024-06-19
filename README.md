@@ -21,3 +21,5 @@ https://github.com/nek009/key_event/tree/master
 ## 実行コードメモ
 
 sudo apt install ros-humble-ros-ign
+sudo apt install ros-foxy-slam-toolbox
+
