@@ -1,4 +1,5 @@
 import os
+import numpy as np
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
@@ -27,17 +28,49 @@ def generate_launch_description():
         ":" +
         model_path])
   
-    
+    #ワールドのsdfファイルを設定(worldタグのあるsdfファイル)
+    world = os.path.join(pkg_share_dir, "models", "worlds", "nav_slam.sdf")
     use_sim_time = LaunchConfiguration('use_sim_time', default='true')
     world_name = LaunchConfiguration('world_name', default='world')
     #ignition gazeboの起動設定
     ign_gz = IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                [os.path.join(get_package_share_directory('ros_ign_gazebo'),
-                              'launch', 'ign_gazebo.launch.py')]),
-            launch_arguments=[('ign_args', [' -r -v 3 ' +
-                              os.path.join(model_path, "world.sdf")
-                             ])])
+        PythonLaunchDescriptionSource(
+            [os.path.join(get_package_share_directory('ros_ign_gazebo'),
+                          'launch', 'ign_gazebo.launch.py')]),
+        launch_arguments=[('ign_args', [' -r -v 3 ' +
+                          world
+                         ])])
+    
+    #ロボットをスポーンさせる設定
+    ignition_spawn_entity = Node(
+        package='ros_ign_gazebo',
+        executable='create',
+        output='screen',
+        arguments=['-entity', 'LidarRobo',
+                   '-name', 'LidarRobo',
+                   #ロボットのsdfファイルを指定
+                   '-file', PathJoinSubstitution([
+                        pkg_share_dir,
+                        "models", "LidarRobo", "model.sdf"]),
+                    #ロボットの位置を指定
+                   '-allow_renaming', 'true',
+                   '-x', '-5.515',
+                   '-y', '0.365',
+                   '-z', '0.04',
+                   '-Y', str(np.pi/2)],
+        )
+    
+    #フィールドをスポーンさせる設定
+    ignition_spawn_world = Node(
+        package='ros_ign_gazebo',
+        executable='create',
+        output='screen',
+            #フィールドのsdfファイルを指定
+        arguments=['-file', PathJoinSubstitution([
+                        pkg_share_dir,
+                        "models", "field", "model.sdf"]),
+                   '-allow_renaming', 'false'],
+        )
 
 
     #ros_ign_bridgeの起動設定
@@ -46,15 +79,36 @@ def generate_launch_description():
         executable='parameter_bridge',
         parameters=[{
             #brigdeの設定ファイルを指定
-            'config_file': os.path.join(pkg_share_dir, 'config', 'nav_teleop.yaml'),
+            'config_file': os.path.join(pkg_share_dir, 'config', 'nav_slam.yaml'),
+            'qos_overrides./tf_static.publisher.durability': 'transient_local',
+            'qos_overrides./odom.publisher.durability': 'transient_local',
         },{'use_sim_time': use_sim_time}],
+        remappings=[
+            ("/odom/tf", "tf"),
+        ],
         output='screen'
     )
+    
+    #rviz2の設定フィルのパスを取得
+    rviz_config_dir = os.path.join(
+        pkg_share_dir,
+        'config',
+        'nav_rviz.rviz')
+    #rviz2の起動設定
+    rviz2 = Node(
+            package='rviz2',
+            executable='rviz2',
+            name='rviz2',
+            arguments=['-d', rviz_config_dir],
+            parameters=[{'use_sim_time': use_sim_time}],
+            output='screen')
 
     
     return LaunchDescription([
         ign_resource_path,
         ign_gz,
+        ignition_spawn_entity,
+        ignition_spawn_world,
                              
         DeclareLaunchArgument(
             'use_sim_time',
@@ -68,5 +122,6 @@ def generate_launch_description():
 
         bridge,
         teleop_node,
+        rviz2,
     ])
 
