@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import xacro
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
@@ -102,8 +103,26 @@ def generate_launch_description():
             arguments=['-d', rviz_config_dir],
             parameters=[{'use_sim_time': use_sim_time}],
             output='screen')
-
     
+    #ロボットのsdfファイルのパスを取得
+    sdf = os.path.join(
+        get_package_share_directory('gz_sim'),
+        'models', 'LidarRobo', 'model.sdf')
+    
+    #xacroでsdfファイルをurdfに変換
+    doc = xacro.parse(open(sdf))
+    xacro.process_doc(doc)
+    
+    #robot_state_publsherの起動設定
+    robot_state_publisher = Node(
+            package='robot_state_publisher',
+            executable='robot_state_publisher',
+            name='robot_state_publisher',
+            output='both',
+            parameters=[{'use_sim_time': use_sim_time,
+                         'robot_description': doc.toxml()}]) # type: ignore
+
+
     return LaunchDescription([
         ign_resource_path,
         ign_gz,
@@ -121,6 +140,7 @@ def generate_launch_description():
             description='World name'),
 
         bridge,
+        robot_state_publisher,
         teleop_node,
         rviz2,
     ])
