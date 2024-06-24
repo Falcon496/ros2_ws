@@ -122,6 +122,21 @@ def generate_launch_description():
             parameters=[{'use_sim_time': use_sim_time,
                          'robot_description': doc.toxml()}]) # type: ignore
     
+    #laserscan_mergerの起動オプション設定
+    laserscan_merger_params_file = LaunchConfiguration('laserscan_merger_params_file')
+    declare_laserscan_merger_params_cmd = DeclareLaunchArgument(
+        'laserscan_merger_params_file',
+        default_value=os.path.join(get_package_share_directory("gz_sim"),
+                                   'params', 'laserscan_merge.yaml'),
+        description='Path to param config in yaml format')
+    # laserscan_mergerの起動設定
+    laserscan_multi_merger = Node(
+        parameters=[laserscan_merger_params_file],
+        package='ira_laser_tools',
+        executable='laserscan_multi_merger',
+        name="laserscan_multi_merger",
+        output='both')
+
     #slam_toolboxの起動オプション設定
     slam_params_file = LaunchConfiguration('slam_params_file')
     declare_slam_params_file_cmd = DeclareLaunchArgument(
@@ -129,7 +144,6 @@ def generate_launch_description():
         default_value=os.path.join(get_package_share_directory("gz_sim"),
                                    'params', 'slam_param.yaml'),
         description='Full path to the ROS2 parameters file to use for the slam_toolbox node')
-
     #slam_toolboxの起動設定
     start_async_slam_toolbox_node = Node(
         parameters=[
@@ -140,6 +154,7 @@ def generate_launch_description():
         executable='async_slam_toolbox_node',
         name='slam_toolbox',
         output='screen')
+
 
 
     return LaunchDescription([
@@ -162,6 +177,8 @@ def generate_launch_description():
         robot_state_publisher,
         teleop_node,
         rviz2,
+        declare_laserscan_merger_params_cmd,
+        laserscan_multi_merger,
         declare_slam_params_file_cmd,
         start_async_slam_toolbox_node,
     ])

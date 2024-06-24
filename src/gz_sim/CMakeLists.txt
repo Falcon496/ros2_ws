@@ -17,7 +17,7 @@ ament_auto_add_executable(
 teleop_node src/teleop_node.cpp
 )
 
-install(DIRECTORY launch models config
+install(DIRECTORY launch models config params
   DESTINATION share/${PROJECT_NAME}
 )
 

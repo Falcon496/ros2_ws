@@ -23,3 +23,8 @@ https://github.com/nek009/key_event/tree/master
 sudo apt install ros-humble-ros-ign
 sudo apt install ros-humble-slam-toolbox
 
+## scan統合ツール
+
+git clone https://github.com/MSDRobotics/ira_laser_tools/tree/humble
+rosdep install -r -y -i --from-paths .
+

@@ -141,6 +141,21 @@ def generate_launch_description():
         name='slam_toolbox',
         output='screen')
 
+    #laserscan_mergerの起動オプション設定
+    laserscan_merger_params_file = LaunchConfiguration('laserscan_merger_params_file')
+    declare_laserscan_merger_params_cmd = DeclareLaunchArgument(
+        'laserscan_merger_params_file',
+        default_value=os.path.join(get_package_share_directory("gz_sim"),
+                                   'params', 'laserscan_merge.yaml'),
+        description='Path to param config in yaml format')
+    # laserscan_mergerの起動設定
+    laserscan_multi_merger = Node(
+        parameters=[laserscan_merger_params_file],
+        package='ira_laser_tools',
+        executable='laserscan_multi_merger',
+        name="laserscan_multi_merger",
+        output='both')
+
 
     return LaunchDescription([
         ign_resource_path,
@@ -162,6 +177,8 @@ def generate_launch_description():
         robot_state_publisher,
         teleop_node,
         rviz2,
+        declare_laserscan_merger_params_cmd,
+        laserscan_multi_merger,
         declare_slam_params_file_cmd,
         start_async_slam_toolbox_node,
     ])
