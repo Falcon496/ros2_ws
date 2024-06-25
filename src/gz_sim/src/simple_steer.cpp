@@ -114,7 +114,6 @@ void RotateAxis::CreateIgnitionIf(void){
 
 void RotateAxis::OnSpeedMessage(const ignition::msgs::Twist &msg)
 {
-  target_speeds_ = msg;
   target_speed_ = msg.linear().x();
 }
 

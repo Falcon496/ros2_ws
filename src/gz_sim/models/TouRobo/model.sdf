@@ -172,9 +172,22 @@
       <child>right_scan</child>
     </joint>
 
+    <!-- Steer front left -->
+    <link name="steer_front_left_link">
+      <pose>-0.160 -0.180 0.0 0 0 0</pose>
+    </link>
+    <joint name="steer_front_left_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>steer_front_left_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+
     <!-- Wheel front left -->
     <link name="wheel_front_left_link">
-      <pose>-0.160 -0.180 0.0 0 0 0</pose>
+      <pose>-0.160 -0.180 0  -1.57 0 0</pose>
       <inertial>
         <mass>0.1</mass>
         <inertia>
@@ -188,16 +201,18 @@
       </inertial>
       <collision name="wheel_front_left_collision">
         <geometry>
-          <sphere>
+          <cylinder>
              <radius>0.055</radius>
-          </sphere>
+             <length>0.025</length>
+          </cylinder>
         </geometry>
       </collision>
       <visual name="wheel_front_left_visual">
           <geometry>
-            <sphere>
+            <cylinder>
               <radius>0.055</radius>
-            </sphere>
+              <length>0.025</length>
+          </cylinder>
           </geometry>
           <material>
             <ambient>1.0 0.0 0.0 1</ambient>
@@ -207,8 +222,21 @@
       </visual>
     </link>
     <joint name="wheel_front_left_joint" type="revolute">
-      <parent>base_link</parent>
+      <parent>steer_front_left_link</parent>
       <child>wheel_front_left_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+
+    <!-- Steer front right -->
+    <link name="steer_front_right_link">
+      <pose>-0.160 0.180 0.0 0 0 0</pose>
+    </link>
+    <joint name="steer_front_right_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>steer_front_right_link</child>
       <axis>
         <xyz>0 0 1</xyz>
       </axis>
@@ -216,7 +244,7 @@
 
     <!-- Wheel front right -->
     <link name="wheel_front_right_link">
-      <pose>-0.160 0.180 0.0 0 0 0</pose>
+      <pose>-0.160 0.180 0.0 -1.57 0 0</pose>
       <inertial>
         <inertia>
           <ixx>1.1175580e-05</ixx>
@@ -230,16 +258,18 @@
       </inertial>
       <collision name="wheel_front_right_collision">
         <geometry>
-          <sphere>
-            <radius>0.055</radius>
-          </sphere>
+          <cylinder>
+             <radius>0.055</radius>
+             <length>0.025</length>
+          </cylinder>
         </geometry>
       </collision>
       <visual name="wheel_front_right_visual">
           <geometry>
-            <sphere>
-              <radius>0.055</radius>
-            </sphere>
+          <cylinder>
+             <radius>0.055</radius>
+             <length>0.025</length>
+          </cylinder>
           </geometry>
           <material>
             <ambient>1.0 0.0 0.0 1</ambient>
@@ -254,8 +284,20 @@
       </visual>
     </link>
     <joint name="wheel_front_right_joint" type="revolute">
-      <parent>base_link</parent>
+      <parent>steer_front_right_link</parent>
       <child>wheel_front_right_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
+
+      <!-- Steer back right -->
+    <link name="steer_back_right_link">
+      <pose>0.160 0.180 0.0 0 0 0</pose>
+    </link>
+    <joint name="steer_back_right_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>steer_back_right_link</child>
       <axis>
         <xyz>0 0 1</xyz>
       </axis>
@@ -263,7 +305,7 @@
   
     <!-- Wheel back right -->
     <link name="wheel_back_right_link">
-      <pose>0.160 0.180 0.0 0 0 0</pose>
+      <pose>0.160 0.180 0.0 -1.57 0 0</pose>
       <inertial>
         <inertia>
           <ixx>1.1175580e-05</ixx>
@@ -277,16 +319,18 @@
       </inertial>
       <collision name="wheel_back_right_collision">
         <geometry>
-          <sphere>
-            <radius>0.055</radius>
-          </sphere>
+          <cylinder>
+             <radius>0.055</radius>
+             <length>0.025</length>
+          </cylinder>
         </geometry>
       </collision>
       <visual name="wheel_back_right_visual">
           <geometry>
-            <sphere>
-              <radius>0.055</radius>
-            </sphere>
+            <cylinder>
+               <radius>0.055</radius>
+               <length>0.025</length>
+            </cylinder>
           </geometry>
           <material>
             <ambient>1.0 0.0 0.0 1</ambient>
@@ -301,17 +345,28 @@
       </visual>
     </link>
     <joint name="wheel_back_right_joint" type="revolute">
-      <parent>base_link</parent>
+      <parent>steer_back_right_link</parent>
       <child>wheel_back_right_link</child>
       <axis>
         <xyz>0 0 1</xyz>
       </axis>
     </joint>
   
+    <!-- Steer back left -->
+    <link name="steer_back_left_link">
+      <pose>0.160 -0.180 0.0 0 0 0</pose>
+    </link>
+    <joint name="steer_back_left_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>steer_back_left_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+      </axis>
+    </joint>
 
     <!-- Wheel back left -->
     <link name="wheel_back_left_link">
-      <pose>0.160 -0.180 0.0 0 0 0</pose>
+      <pose>0.160 -0.180 0.0 -1.57 0 0</pose>
       <inertial>
         <inertia>
           <ixx>1.1175580e-05</ixx>
@@ -325,16 +380,18 @@
       </inertial>
       <collision name="wheel_back_left_collision">
         <geometry>
-          <sphere>
-            <radius>0.055</radius>
-          </sphere>
+          <cylinder>
+             <radius>0.055</radius>
+             <length>0.025</length>
+          </cylinder>
         </geometry>
       </collision>
       <visual name="wheel_back_left_visual">
           <geometry>
-            <sphere>
-              <radius>0.055</radius>
-            </sphere>
+            <cylinder>
+               <radius>0.055</radius>
+               <length>0.025</length>
+            </cylinder>
           </geometry>
           <material>
             <ambient>1.0 0.0 0.0 1</ambient>
@@ -349,7 +406,7 @@
       </visual>
     </link>
     <joint name="wheel_back_left_joint" type="revolute">
-      <parent>base_link</parent>
+      <parent>steer_back_left_link</parent>
       <child>wheel_back_left_link</child>
       <axis>
         <xyz>0 0 1</xyz>

@@ -34,7 +34,6 @@ namespace iginition_plugin_lecture
       std::string target2_joint_name_{""};
       std::string target3_joint_name_{""};
       std::string target4_joint_name_{""};
-      ignition::msgs::Twist target_speeds_;
       float target_speed_{0.0f};
       float target_rad_{0.0f};
   };
