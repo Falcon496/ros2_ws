@@ -14,6 +14,7 @@ RotateAxis::~RotateAxis()
 {
 }
 
+// シミュレーション起動時
 void RotateAxis::Configure(const ignition::gazebo::Entity &_entity,
     const std::shared_ptr<const sdf::Element> &_sdf,
     ignition::gazebo::EntityComponentManager &_ecm,
@@ -24,76 +25,81 @@ void RotateAxis::Configure(const ignition::gazebo::Entity &_entity,
   model_ = ignition::gazebo::Model(_entity);
 
   auto ptr = const_cast<sdf::Element *>(_sdf.get());
-  sdf::ElementPtr target1_joint_elem = ptr->GetElement("target1_joint");
-  sdf::ElementPtr target2_joint_elem = ptr->GetElement("target2_joint");
-  sdf::ElementPtr target3_joint_elem = ptr->GetElement("target3_joint");
-  sdf::ElementPtr target4_joint_elem = ptr->GetElement("target4_joint");
-  if (target1_joint_elem && target2_joint_elem && target3_joint_elem && target4_joint_elem) {
-    target1_joint_name_ = target1_joint_elem->Get<std::string>();
-    target2_joint_name_ = target2_joint_elem->Get<std::string>();
-    target3_joint_name_ = target3_joint_elem->Get<std::string>();
-    target4_joint_name_ = target4_joint_elem->Get<std::string>();
+  sdf::ElementPtr wheel1_joint_elem = ptr->GetElement("wheel1_joint");
+  sdf::ElementPtr wheel2_joint_elem = ptr->GetElement("wheel2_joint");
+  sdf::ElementPtr wheel3_joint_elem = ptr->GetElement("wheel3_joint");
+  sdf::ElementPtr wheel4_joint_elem = ptr->GetElement("wheel4_joint");
+  if (wheel1_joint_elem && wheel2_joint_elem && wheel3_joint_elem && wheel4_joint_elem) {
+    wheel1_joint_name_ = wheel1_joint_elem->Get<std::string>();
+    wheel2_joint_name_ = wheel2_joint_elem->Get<std::string>();
+    wheel3_joint_name_ = wheel3_joint_elem->Get<std::string>();
+    wheel4_joint_name_ = wheel4_joint_elem->Get<std::string>();
   } else {
-    ignerr << "sdf target_joint not found" << std::endl;
+    ignerr << "sdf wheel_joint not found" << std::endl;
   }
 }
 
+// ワールド更新前、軸の速度の設定などを行う
 void RotateAxis::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
     ignition::gazebo::EntityComponentManager &_ecm)
 {
     (void)_info;
     (void)_ecm;
-    ignition::gazebo::Entity joint1 = model_.JointByName(_ecm, target1_joint_name_);
-    ignition::gazebo::Entity joint2 = model_.JointByName(_ecm, target2_joint_name_);
-    ignition::gazebo::Entity joint3 = model_.JointByName(_ecm, target3_joint_name_);
-    ignition::gazebo::Entity joint4 = model_.JointByName(_ecm, target4_joint_name_);
+    // model_.JointByName(_ecm, "joint_name");で、過去に設定したジョイントの設定が取れます。
+    ignition::gazebo::Entity joint1 = model_.JointByName(_ecm, wheel1_joint_name_);
+    ignition::gazebo::Entity joint2 = model_.JointByName(_ecm, wheel2_joint_name_);
+    ignition::gazebo::Entity joint3 = model_.JointByName(_ecm, wheel3_joint_name_);
+    ignition::gazebo::Entity joint4 = model_.JointByName(_ecm, wheel4_joint_name_);
     if (joint1 == ignition::gazebo::kNullEntity){
-      ignerr << target1_joint_name_ <<" not found" << std::endl;
+      ignerr << wheel1_joint_name_ <<" not found" << std::endl;
       return;
     }
     if (joint2 == ignition::gazebo::kNullEntity){
-      ignerr << target2_joint_name_ <<" not found" << std::endl;
+      ignerr << wheel2_joint_name_ <<" not found" << std::endl;
       return;
     }
     if (joint3 == ignition::gazebo::kNullEntity){
-      ignerr << target3_joint_name_ <<" not found" << std::endl;
+      ignerr << wheel3_joint_name_ <<" not found" << std::endl;
       return;
     }
     if (joint4 == ignition::gazebo::kNullEntity){
-      ignerr << target4_joint_name_ <<" not found" << std::endl;
+      ignerr << wheel4_joint_name_ <<" not found" << std::endl;
       return;
     }
 
+    // 空でないときはJointVelocityCmd()で上書きをします。そうでないときはCreateComponent()でリストに追加
     auto vel1 = _ecm.Component<ignition::gazebo::components::JointVelocityCmd>(joint1);
     auto vel2 = _ecm.Component<ignition::gazebo::components::JointVelocityCmd>(joint2);
     auto vel3 = _ecm.Component<ignition::gazebo::components::JointVelocityCmd>(joint3);
     auto vel4 = _ecm.Component<ignition::gazebo::components::JointVelocityCmd>(joint4);
     if (vel1 != nullptr) {
-      *vel1 = ignition::gazebo::components::JointVelocityCmd({target_speed_});
+      *vel1 = ignition::gazebo::components::JointVelocityCmd({wheel_speed_});
     }
     else {
-      _ecm.CreateComponent(joint1, ignition::gazebo::components::JointVelocityCmd({target_speed_}));
+      _ecm.CreateComponent(joint1, ignition::gazebo::components::JointVelocityCmd({wheel_speed_}));
     }
     if (vel2 != nullptr) {
-      *vel2 = ignition::gazebo::components::JointVelocityCmd({target_speed_});
+      *vel2 = ignition::gazebo::components::JointVelocityCmd({wheel_speed_});
     }
     else {
-      _ecm.CreateComponent(joint2, ignition::gazebo::components::JointVelocityCmd({target_speed_}));
+      _ecm.CreateComponent(joint2, ignition::gazebo::components::JointVelocityCmd({wheel_speed_}));
     }
     if (vel3 != nullptr) {
-      *vel3 = ignition::gazebo::components::JointVelocityCmd({target_speed_});
+      *vel3 = ignition::gazebo::components::JointVelocityCmd({wheel_speed_});
     }
     else {
-      _ecm.CreateComponent(joint3, ignition::gazebo::components::JointVelocityCmd({target_speed_}));
+      _ecm.CreateComponent(joint3, ignition::gazebo::components::JointVelocityCmd({wheel_speed_}));
     }
     if (vel4 != nullptr) {
-      *vel4 = ignition::gazebo::components::JointVelocityCmd({target_speed_});
+      *vel4 = ignition::gazebo::components::JointVelocityCmd({wheel_speed_});
     }
     else {
-      _ecm.CreateComponent(joint4, ignition::gazebo::components::JointVelocityCmd({target_speed_}));
+      _ecm.CreateComponent(joint4, ignition::gazebo::components::JointVelocityCmd({wheel_speed_}));
     }
  }
 
+
+// ワールド更新中
 void RotateAxis::Update(const ignition::gazebo::UpdateInfo &_info,
     ignition::gazebo::EntityComponentManager &_ecm)
 {
@@ -101,6 +107,7 @@ void RotateAxis::Update(const ignition::gazebo::UpdateInfo &_info,
   (void)_ecm;
 }
 
+// ワールド更新後(PostUpdate())、テレメトリーの出力等を行います。
 void RotateAxis::PostUpdate(const ignition::gazebo::UpdateInfo &_info,
     const ignition::gazebo::EntityComponentManager &_ecm)
 {
@@ -108,13 +115,15 @@ void RotateAxis::PostUpdate(const ignition::gazebo::UpdateInfo &_info,
   (void)_ecm;
 }
 
+
 void RotateAxis::CreateIgnitionIf(void){
-  this->node_.Subscribe("target_speed", &RotateAxis::OnSpeedMessage, this);
+  this->node_.Subscribe("wheel_speed", &RotateAxis::OnSpeedMessage, this);
 }
 
+// 受信コールバックに登録したOnSpeedMessage()で角速度の指令値を受け取ります。
 void RotateAxis::OnSpeedMessage(const ignition::msgs::Twist &msg)
 {
-  target_speed_ = msg.linear().x();
+  wheel_speed_ = msg.linear().x();
 }
 
 }

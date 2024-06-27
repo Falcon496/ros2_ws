@@ -30,11 +30,11 @@ namespace iginition_plugin_lecture
 
       ignition::gazebo::Model model_;
       ignition::transport::Node node_;
-      std::string target1_joint_name_{""};
-      std::string target2_joint_name_{""};
-      std::string target3_joint_name_{""};
-      std::string target4_joint_name_{""};
-      float target_speed_{0.0f};
-      float target_rad_{0.0f};
+      std::string wheel1_joint_name_{""};
+      std::string wheel2_joint_name_{""};
+      std::string wheel3_joint_name_{""};
+      std::string wheel4_joint_name_{""};
+      float wheel_speed_{0.0f};
+      float wheel_rad_{0.0f};
   };
 }
