@@ -21,6 +21,7 @@ https://github.com/nek009/key_event/tree/master
 ## 実行コードメモ
 
 sudo apt install ros-humble-ros-ign
+sudo apt install xterm
 sudo apt install ros-humble-slam-toolbox
 
 ## scan統合ツール
