@@ -415,13 +415,25 @@
 
     
     <!-- Differential drive -->
-    <plugin filename="libignition-gazebo-diff-drive-system.so" 
+    <!-- <plugin filename="libignition-gazebo-diff-drive-system.so" 
       name="ignition::gazebo::systems::DiffDrive">
       <left_joint>wheel_left_joint</left_joint>
       <right_joint>wheel_right_joint</right_joint>
       <wheel_separation>0.19</wheel_separation>
       <wheel_radius>0.033</wheel_radius>
       <topic>cmd_vel</topic>
+    </plugin> -->
+
+    <!-- steer drive -->
+    <plugin filename="libSteerControler" name="iginition_plugin_steer::SteerControler">
+      <steer1_joint>steer_front_right_joint</steer1_joint>
+      <steer2_joint>steer_front_left_joint</steer2_joint>
+      <steer3_joint>steer_back_left_joint</steer3_joint>
+      <steer4_joint>steer_back_right_joint</steer4_joint>
+      <wheel1_joint>wheel_front_right_joint</wheel1_joint>
+      <wheel2_joint>wheel_front_left_joint</wheel2_joint>
+      <wheel3_joint>wheel_back_left_joint</wheel3_joint>
+      <wheel4_joint>wheel_back_right_joint</wheel4_joint>
     </plugin>
 
     <!-- Joint state publisher -->
