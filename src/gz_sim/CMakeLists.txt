@@ -9,6 +9,19 @@ endif()
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
+# find_package(ignition-plugin1 REQUIRED COMPONENTS register)
+include_directories(SYSTEM
+${IGNITION-COMMON_INCLUDE_DIRS}
+${IGNITION-GUI_INCLUDE_DIRS}
+)
+add_library(SteerControler SHARED
+src/simple_steer.cpp
+)
+target_link_libraries(SteerControler
+${IGNITION-PLUGIN_LIBRARIES}
+${IGNITION-GAZEBO_LIBRARIES}
+)
+
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -32,6 +45,8 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/hooks/${PROJECT_NAME}.dsv.in")
 
 # ament_package()
 ament_auto_package()

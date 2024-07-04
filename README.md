@@ -20,11 +20,11 @@ https://github.com/nek009/key_event/tree/master
 
 ## 実行コードメモ
 
-sudo apt install ros-humble-ros-ign
-sudo apt install ros-humble-slam-toolbox
+sudo apt install ros-humble-ros-ign -y
+sudo apt install xterm -y
+sudo apt install ros-humble-slam-toolbox -y
 
 ## scan統合ツール
 
 git clone https://github.com/MSDRobotics/ira_laser_tools/tree/humble
 rosdep install -r -y -i --from-paths .
-

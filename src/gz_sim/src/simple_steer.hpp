@@ -2,9 +2,9 @@
 #include <ignition/gazebo/Model.hh>
 #include <ignition/transport/Node.hh>
 
-namespace iginition_plugin_lecture
+namespace iginition_plugin_steer
 {
-  class RotateAxis:
+  class SteerControler:
     public ignition::gazebo::System,
     public ignition::gazebo::ISystemConfigure,
     public ignition::gazebo::ISystemPreUpdate,
@@ -12,8 +12,8 @@ namespace iginition_plugin_lecture
     public ignition::gazebo::ISystemPostUpdate
   {
     public: 
-        RotateAxis();
-        ~RotateAxis() override;
+        SteerControler();
+        ~SteerControler() override;
         void Configure(const ignition::gazebo::Entity &_entity,
             const std::shared_ptr<const sdf::Element> &_sdf,
             ignition::gazebo::EntityComponentManager &_ecm,
@@ -30,11 +30,15 @@ namespace iginition_plugin_lecture
 
       ignition::gazebo::Model model_;
       ignition::transport::Node node_;
-      std::string target1_joint_name_{""};
-      std::string target2_joint_name_{""};
-      std::string target3_joint_name_{""};
-      std::string target4_joint_name_{""};
-      float target_speed_{0.0f};
-      float target_rad_{0.0f};
+      std::string steer1_joint_name_{""};
+      std::string steer2_joint_name_{""};
+      std::string steer3_joint_name_{""};
+      std::string steer4_joint_name_{""};
+      std::string wheel1_joint_name_{""};
+      std::string wheel2_joint_name_{""};
+      std::string wheel3_joint_name_{""};
+      std::string wheel4_joint_name_{""};
+      float steer_ang_{0.0f};
+      float wheel_speed_{0.0f};
   };
 }
