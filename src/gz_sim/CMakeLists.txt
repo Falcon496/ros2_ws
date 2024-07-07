@@ -9,18 +9,22 @@ endif()
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
-# find_package(ignition-plugin1 REQUIRED COMPONENTS register)
+find_package(ignition-cmake2 REQUIRED)
+set(IGN_PLUGIN_VER 1)
+set(IGN_COMMON_VER 4)
+ign_find_package(ignition-plugin1 REQUIRED COMPONENTS register)
 include_directories(SYSTEM
-${IGNITION-COMMON_INCLUDE_DIRS}
-${IGNITION-GUI_INCLUDE_DIRS}
+  ${IGNITION-COMMON_INCLUDE_DIRS}
+  ${IGNITION-GUI_INCLUDE_DIRS}
 )
-add_library(SteerControler SHARED
-src/simple_steer.cpp
-)
+# Add sources for each plugin to be registered.
+add_library(SteerControler src/gz_steer.cpp)
+set_property(TARGET SteerControler PROPERTY CXX_STANDARD 17)
 target_link_libraries(SteerControler
-${IGNITION-PLUGIN_LIBRARIES}
-${IGNITION-GAZEBO_LIBRARIES}
+  ${IGNITION-PLUGIN_LIBRARIES}
+  ${IGNITION-GAZEBO_LIBRARIES}
 )
+
 
 # uncomment the following section in order to fill in
 # further dependencies manually.
@@ -30,7 +34,7 @@ ament_auto_add_executable(
 teleop_node src/teleop_node.cpp
 )
 
-install(DIRECTORY launch models config params
+install(DIRECTORY launch models config params hooks
   DESTINATION share/${PROJECT_NAME}
 )
 

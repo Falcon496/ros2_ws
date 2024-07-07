@@ -1,4 +1,4 @@
-#include "simple_steer.hpp"
+#include "gz_steer.hpp"
 #include <ignition/gazebo/components/JointVelocityCmd.hh>
 #include <ignition/gazebo/components/JointPosition.hh>
 #include <ignition/msgs/twist.pb.h>
@@ -178,7 +178,7 @@ void SteerControler::PostUpdate(const ignition::gazebo::UpdateInfo &_info,
 
 
 void SteerControler::CreateIgnitionIf(void){
-  this->node_.Subscribe("steer_speed", &SteerControler::OnSpeedMessage, this);
+  this->node_.Subscribe("/cmd_vel", &SteerControler::OnSpeedMessage, this);
 }
 
 // 受信コールバックに登録したOnSpeedMessage()で角速度の指令値を受け取ります。

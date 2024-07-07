@@ -16,9 +16,9 @@
   <depend>key_event_msgs</depend>
   <depend>key_event_nodes</depend>
   <depend>slam_toolbox</depend>
-  <depend>ira_laser_tools</depend>
+  <!-- <depend>ira_laser_tools</depend> -->
   <depend>ignition-gazebo6</depend>
-  <depend>ignition-plugin1</depend>
+  <!-- <depend>ignition-plugin1</depend> -->
   
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
